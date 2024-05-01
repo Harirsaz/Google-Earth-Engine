@@ -1,0 +1,31 @@
+//Download Rainfall data using Google Earth Engine
+
+//Define area
+var aoi = geometry
+
+//Define start & end Date
+var startDate= '2024-01-01'
+var endDate = '2024-04-23'
+
+//Define rainfall data
+
+var imageCollection = 'UCSB-CHG/CHIRPS/DAILY'
+var bandName = 'precipitation'
+var resolution = 5566   //in meters
+
+
+////////////////////////////////
+var rainfall = ee.ImageCollection(imageCollection)
+                    .filter(ee.Filter.date(startDate, endDate))
+                    .select(bandName);
+                    
+var chart = ui.Chart.image.series({
+  imageCollection: rainfall, 
+  region: aoi, 
+  reducer: ee.Reducer.mean(), 
+  scale: resolution,
+});
+print(chart);
+
+Map.addLayer (aoi)
+Map.centerObject(aoi)  
